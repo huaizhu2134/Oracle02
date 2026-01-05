@@ -579,25 +579,104 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 使用公共样式，仅保留页面特有样式 */
-.statistics-card {
-  text-align: center;
-  height: 120px;
+.management-container {
+  padding: 12px;
+  background: #f5f7fa;
+  min-height: calc(100vh - 60px);
+}
+
+.tabs {
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.tab-content {
+  padding: 12px 0;
+}
+
+.search-bar,
+.operation-bar {
+  margin-bottom: 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-form :deep(.el-form-item) {
+  margin-bottom: 8px;
+}
+
+.operation-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+}
+
+.operation-left .el-button {
+  margin-right: 8px;
+}
+
+.statistics-row {
+  margin-bottom: 20px;
+}
+
+.statistics-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s;
+}
+
+.statistics-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .statistics-item {
-  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.statistics-label {
+  font-size: 14px;
+  color: #909399;
+  margin-bottom: 8px;
+}
+
+.statistics-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #303133;
+  margin-bottom: 4px;
 }
 
 .statistics-desc {
-  font-size: var(--font-size-xs);
-  color: var(--text-color-placeholder);
+  font-size: 12px;
+  color: #909399;
+}
+
+.chart-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .table-container {
-  height: calc(100vh - 280px);
+  height: calc(100vh - 380px);
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.data-table :deep(.el-table__header-wrapper) {
+  border-radius: 6px 6px 0 0;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
 }
 </style>
+

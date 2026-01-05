@@ -576,8 +576,53 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 使用公共样式，仅保留页面特有样式 */
+.management-container {
+  padding: 12px;
+  background: #f5f7fa;
+}
+
+.search-bar,
+.operation-bar {
+  margin-bottom: 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-form :deep(.el-form-item) {
+  margin-bottom: 8px;
+}
+
+.operation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.operation-left .el-button,
+.operation-right .el-button {
+  margin-right: 8px;
+}
+
 .table-container {
   height: calc(100vh - 280px);
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.data-table :deep(.el-table__header-wrapper) {
+  border-radius: 6px 6px 0 0;
+}
+
+.action-buttons .el-button {
+  margin: 0 4px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
 }
 </style>

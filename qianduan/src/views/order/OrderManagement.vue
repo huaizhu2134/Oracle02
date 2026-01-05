@@ -641,29 +641,122 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 使用公共样式，仅保留页面特有样式 */
-.table-container {
-  height: calc(100vh - 380px);
+.management-container {
+  padding: 12px;
+  background: #f5f7fa;
 }
 
-/* 统计卡片颜色 */
+.search-bar,
+.operation-bar {
+  margin-bottom: 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-form :deep(.el-form-item) {
+  margin-bottom: 8px;
+}
+
+.operation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.operation-left .el-button,
+.operation-right .el-button {
+  margin-right: 8px;
+}
+
+.statistics-row {
+  margin-bottom: 12px;
+}
+
+.statistics-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s;
+}
+
+.statistics-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.statistics-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-size: 24px;
+}
+
 .today-orders {
-  background: linear-gradient(135deg, #7460ee, #3b5bdb);
-  color: white;
+  background: #e6f7ff;
+  color: #1890ff;
 }
 
 .today-income {
-  background: linear-gradient(135deg, #26c6da, #00acc1);
-  color: white;
+  background: #f6ffed;
+  color: #52c41a;
 }
 
 .pending-orders {
-  background: linear-gradient(135deg, #ffbc34, #e6a23c);
-  color: white;
+  background: #fff7e6;
+  color: #fa8c16;
 }
 
 .completed-orders {
-  background: linear-gradient(135deg, #0f9d58, #4caf50);
-  color: white;
+  background: #f9f0ff;
+  color: #722ed1;
+}
+
+.statistics-content {
+  flex: 1;
+}
+
+.statistics-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #303133;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.statistics-label {
+  font-size: 13px;
+  color: #909399;
+}
+
+.table-container {
+  height: calc(100vh - 420px);
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.data-table :deep(.el-table__header-wrapper) {
+  border-radius: 6px 6px 0 0;
+}
+
+.action-buttons .el-button {
+  margin: 0 4px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
 }
 </style>
