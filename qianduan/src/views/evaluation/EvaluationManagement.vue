@@ -72,13 +72,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="评价时间" width="160" />
-        <el-table-column label="操作" width="100" fixed="right">
-          <template #default="scope">
-            <el-button size="small" @click="handleReplyEvaluation(scope.row)" type="primary">
-              回复
-            </el-button>
-          </template>
-        </el-table-column>
+
       </el-table>
 
       <!-- 评价分页 -->
@@ -95,28 +89,7 @@
       </div>
     </div>
 
-    <!-- 评价回复对话框 -->
-    <el-dialog title="回复评价" v-model="replyDialogVisible" width="600px">
-      <el-form>
-        <el-form-item label="评价内容">
-          <div class="evaluation-content">{{ currentEvaluation.content }}</div>
-        </el-form-item>
-        <el-form-item label="回复内容">
-          <el-input 
-            v-model="replyContent" 
-            type="textarea" 
-            :rows="4" 
-            placeholder="请输入回复内容"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="replyDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleReplySubmit">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+
   </div>
 </template>
 
@@ -129,9 +102,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 // 响应式数据
 const evaluationLoading = ref(false)
 const evaluationList = ref([])
-const replyDialogVisible = ref(false)
-const currentEvaluation = ref({})
-const replyContent = ref('')
 
 // 评价搜索表单
 const evaluationSearchForm = reactive({
@@ -205,36 +175,7 @@ const handleEvaluationCurrentChange = (val) => {
   fetchEvaluationData()
 }
 
-// 回复评价
-const handleReplyEvaluation = (row) => {
-  currentEvaluation.value = row
-  replyContent.value = ''
-  replyDialogVisible.value = true
-}
 
-// 提交评价回复
-const handleReplySubmit = async () => {
-  try {
-    const response = await request({
-      url: '/api/evaluation/reply',
-      method: 'post',
-      data: {
-        evalId: currentEvaluation.value.evalId,
-        staffReply: replyContent.value
-      }
-    })
-    if (response.code === 200) {
-      ElMessage.success('回复成功')
-      replyDialogVisible.value = false
-      fetchEvaluationData() // 刷新数据
-    } else {
-      ElMessage.error(response.message || '回复失败')
-    }
-  } catch (error) {
-    console.error('回复失败:', error)
-    ElMessage.error('回复失败')
-  }
-}
 
 onMounted(() => {
   fetchEvaluationData()
@@ -275,11 +216,5 @@ onMounted(() => {
   padding: 12px 0;
 }
 
-.evaluation-content {
-  padding: 10px;
-  background-color: #f5f7fa;
-  border-radius: 4px;
-  line-height: 1.5;
-  color: #606266;
-}
+
 </style>

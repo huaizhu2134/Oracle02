@@ -50,10 +50,6 @@
               <el-icon><UserFilled /></el-icon>
               <template #title>客户管理</template>
             </el-menu-item>
-            <el-menu-item index="/order">
-              <el-icon><Document /></el-icon>
-              <template #title>订单管理</template>
-            </el-menu-item>
             <el-menu-item index="/evaluation">
               <el-icon><ChatLineRound /></el-icon>
               <template #title>评价管理</template>
@@ -62,6 +58,10 @@
               <el-icon><ChatLineRound /></el-icon>
               <template #title>投诉管理</template>
             </el-menu-item>
+            <el-menu-item index="/order">
+            <el-icon><Document /></el-icon>
+            <template #title>订单管理</template>
+          </el-menu-item>
             <el-menu-item index="/finance">
               <el-icon><Money /></el-icon>
               <template #title>财务管理</template>
