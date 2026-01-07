@@ -7,6 +7,7 @@ import org.example.oracle01.util.Result;
 import org.example.oracle01.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    @Transactional
     public Result<String> addStaff(Staff staff) {
         try {
             int result = staffMapper.insertStaff(staff);
@@ -63,6 +65,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    @Transactional
     public Result<String> updateStaff(Staff staff) {
         try {
             int result = staffMapper.updateStaff(staff);
@@ -77,6 +80,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    @Transactional
     public Result<String> deleteStaff(Long id) {
         try {
             int result = staffMapper.deleteStaff(id);

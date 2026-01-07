@@ -345,7 +345,7 @@ const incomePage = reactive({
 // 获取财务统计数据
 const fetchStatistics = async () => {
   try {
-    const response = await request({ url: '/api/test/statistics', method: 'get' })
+    const response = await getFinanceSummary()
     if (response.code === 200) {
       statistics.todayOrders = response.data.todayOrders || 0
       statistics.todayIncome = response.data.todayIncome || 0

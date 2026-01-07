@@ -7,6 +7,7 @@ import org.example.oracle01.util.Result;
 import org.example.oracle01.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -18,16 +19,17 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-    public Result<PageResult<Order>> getOrderList(Map<String, Object> params) {
+    public Result<PageResult<Map<String, Object>>> getOrderList(Map<String, Object> params) {
         try {
             // 获取总记录数
             Integer page = params.get("page") != null ? (Integer) params.get("page") : 0;
             Integer size = params.get("size") != null ? (Integer) params.get("size") : 10;
-            
+
             int total = orderMapper.countOrder(params);
-            List<Order> orderList = orderMapper.selectOrderList(params);
-            
-            PageResult<Order> pageResult = new PageResult<>((long) total, orderList, page/size + 1, size);
+            List<Map<String, Object>> orderList = orderMapper.selectOrderList(params);
+
+            PageResult<Map<String, Object>> pageResult = new PageResult<>((long) total, orderList, page / size + 1,
+                    size);
             return Result.success(pageResult);
         } catch (Exception e) {
             return Result.error("查询订单列表失败：" + e.getMessage());
@@ -49,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Result<String> addOrder(Order order) {
         try {
             int result = orderMapper.insertOrder(order);
@@ -63,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Result<String> updateOrder(Order order) {
         try {
             int result = orderMapper.updateOrder(order);
@@ -77,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Result<String> deleteOrder(Long id) {
         try {
             int result = orderMapper.deleteOrder(id);
@@ -91,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Result<String> updateOrderStatus(Long id, String status) {
         try {
             int result = orderMapper.updateOrderStatus(id, status);

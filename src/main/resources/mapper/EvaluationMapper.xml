@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.oracle01.mapper.EvaluationMapper">
 
-    <resultMap id="BaseResultMap" type="org.example.oracle01.model.Evaluation">
-        <id column="EVAL_ID" property="evalId" jdbcType="NUMERIC"/>
-        <result column="ORDER_ID" property="orderId" jdbcType="NUMERIC"/>
-        <result column="CUSTOMER_ID" property="customerId" jdbcType="NUMERIC"/>
-        <result column="STAFF_ID" property="staffId" jdbcType="NUMERIC"/>
-        <result column="SCORE" property="score" jdbcType="NUMERIC"/>
+    <resultMap id="BaseResultMap" type="map">
+        <id column="EVAL_ID" property="evalId" jdbcType="BIGINT"/>
+        <result column="ORDER_ID" property="orderId" jdbcType="BIGINT"/>
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="INTEGER"/>
+        <result column="STAFF_ID" property="staffId" jdbcType="INTEGER"/>
+        <result column="SCORE" property="score" jdbcType="INTEGER"/>
         <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
         <result column="TAGS" property="tags" jdbcType="VARCHAR"/>
         <result column="IS_ANONYMOUS" property="isAnonymous" jdbcType="CHAR"/>
@@ -15,6 +15,9 @@
         <result column="REPLY_TIME" property="replyTime" jdbcType="TIMESTAMP"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="IS_DELETED" property="isDeleted" jdbcType="CHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -23,25 +26,41 @@
     </sql>
 
     <select id="selectEvaluationList" parameterType="map" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM TB_EVALUATION
-        WHERE IS_DELETED = 'N'
+        SELECT 
+            e.EVAL_ID, e.ORDER_ID, e.CUSTOMER_ID, e.STAFF_ID, e.SCORE, e.CONTENT, 
+            e.TAGS, e.IS_ANONYMOUS, e.STAFF_REPLY, e.REPLY_TIME, e.CREATE_TIME, e.IS_DELETED,
+            o.ORDER_NO,
+            s.STAFF_NAME,
+            c.NICKNAME AS CUSTOMER_NAME
+        FROM TB_EVALUATION e
+        LEFT JOIN TB_ORDER o ON e.ORDER_ID = o.ORDER_ID
+        LEFT JOIN TB_STAFF s ON e.STAFF_ID = s.STAFF_ID
+        LEFT JOIN TB_CUSTOMER c ON e.CUSTOMER_ID = c.CUSTOMER_ID
+        WHERE e.IS_DELETED = 'N'
         <if test="params.orderId != null">
-            AND ORDER_ID = #{params.orderId}
+            AND e.ORDER_ID = #{params.orderId}
         </if>
         <if test="params.customerId != null">
-            AND CUSTOMER_ID = #{params.customerId}
+            AND e.CUSTOMER_ID = #{params.customerId}
         </if>
         <if test="params.staffId != null">
-            AND STAFF_ID = #{params.staffId}
+            AND e.STAFF_ID = #{params.staffId}
         </if>
         <if test="params.score != null">
-            AND SCORE = #{params.score}
+            AND e.SCORE = #{params.score}
         </if>
-        ORDER BY CREATE_TIME DESC
+        <if test="params.orderNo != null and params.orderNo != ''">
+            AND o.ORDER_NO LIKE CONCAT('%', #{params.orderNo}, '%')
+        </if>
+        <if test="params.staffName != null and params.staffName != ''">
+            AND s.STAFF_NAME LIKE CONCAT('%', #{params.staffName}, '%')
+        </if>
+        <if test="params.customerName != null and params.customerName != ''">
+            AND c.NICKNAME LIKE CONCAT('%', #{params.customerName}, '%')
+        </if>
+        ORDER BY e.CREATE_TIME DESC
         <if test="params.page != null and params.size != null">
-            OFFSET #{params.page} ROWS
-            FETCH NEXT #{params.size} ROWS ONLY
+            LIMIT #{params.size} OFFSET #{params.page}
         </if>
     </select>
 
@@ -56,9 +75,9 @@
             EVAL_ID, ORDER_ID, CUSTOMER_ID, STAFF_ID, SCORE, CONTENT, 
             TAGS, IS_ANONYMOUS, STAFF_REPLY, REPLY_TIME, CREATE_TIME, IS_DELETED
         ) VALUES (
-            SEQ_EVAL_ID.NEXTVAL, #{orderId}, #{customerId}, #{staffId}, 
+            #{evalId}, #{orderId}, #{customerId}, #{staffId}, 
             #{score}, #{content}, #{tags}, #{isAnonymous}, #{staffReply}, 
-            #{replyTime}, SYSDATE, 'N'
+            #{replyTime}, NOW(), 'N'
         )
     </insert>
 

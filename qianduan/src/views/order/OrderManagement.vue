@@ -81,10 +81,7 @@
             <el-icon><Plus /></el-icon>
             创建订单
           </el-button>
-          <el-button type="success">
-            <el-icon><Download /></el-icon>
-            导出
-          </el-button>
+
 
         </div>
         <div class="operation-right">
@@ -99,7 +96,7 @@
     <!-- 统计卡片 -->
     <el-row :gutter="16" class="statistics-row">
       <el-col :span="6">
-        <el-card class="statistics-card" shadow="never">
+        <el-card class="statistics-card hover-lift" shadow="hover">
           <div class="statistics-item">
             <div class="statistics-icon today-orders">
               <el-icon><Calendar /></el-icon>
@@ -112,7 +109,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card class="statistics-card" shadow="never">
+        <el-card class="statistics-card hover-lift" shadow="hover">
           <div class="statistics-item">
             <div class="statistics-icon today-income">
               <el-icon><Money /></el-icon>
@@ -125,7 +122,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card class="statistics-card" shadow="never">
+        <el-card class="statistics-card hover-lift" shadow="hover">
           <div class="statistics-item">
             <div class="statistics-icon pending-orders">
               <el-icon><Clock /></el-icon>
@@ -138,7 +135,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card class="statistics-card" shadow="never">
+        <el-card class="statistics-card hover-lift" shadow="hover">
           <div class="statistics-item">
             <div class="statistics-icon completed-orders">
               <el-icon><Finished /></el-icon>
@@ -162,29 +159,40 @@
         :header-cell-style="{ background: '#fafafa', color: '#606266' }"
         class="data-table"
         height="calc(100vh - 420px)"
+        stripe
+        :row-style="{transition: 'all 0.3s ease'}"
+        :cell-style="{transition: 'all 0.3s ease'}"
       >
-        <el-table-column type="index" width="50" label="#" />
-        <el-table-column prop="orderNo" label="订单号" width="180" show-overflow-tooltip />
+        <el-table-column type="index" width="50" label="#" fixed="left" />
+        <el-table-column prop="orderNo" label="订单号" width="180" show-overflow-tooltip fixed="left" />
         <el-table-column prop="customerName" label="客户名称" width="120" show-overflow-tooltip />
         <el-table-column prop="staffName" label="陪玩昵称" width="120" show-overflow-tooltip />
         <el-table-column prop="gameType" label="游戏类型" width="100" align="center">
           <template #default="scope">
-            <el-tag size="small">{{ scope.row.gameType }}</el-tag>
+            <el-tag 
+              size="small" 
+              :type="scope.row.gameType === '英雄联盟' ? 'primary' : 
+                     scope.row.gameType === '王者荣耀' ? 'success' : 
+                     scope.row.gameType === '和平精英' ? 'warning' : 
+                     scope.row.gameType === '绝地求生' ? 'danger' : 'info'"
+            >
+              {{ scope.row.gameType }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="serviceHours" label="服务时长" width="100" align="center">
           <template #default="scope">
-            {{ scope.row.serviceHours }}小时
+            <el-tag type="warning" size="small">{{ scope.row.serviceHours }}小时</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="unitPrice" label="单价" width="90" align="right">
           <template #default="scope">
-            <span style="color: #f56c6c; font-weight: bold;">¥{{ scope.row.unitPrice }}</span>
+            <span class="price-red">¥{{ scope.row.unitPrice }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="totalAmount" label="总金额" width="100" align="right">
           <template #default="scope">
-            <span style="color: #67c23a; font-weight: bold;">¥{{ scope.row.totalAmount }}</span>
+            <span class="price-green">¥{{ scope.row.totalAmount }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="orderStatus" label="订单状态" width="100" align="center">

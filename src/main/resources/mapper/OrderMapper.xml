@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.oracle01.mapper.OrderMapper">
 
-    <resultMap id="BaseResultMap" type="org.example.oracle01.model.Order">
-        <id column="ORDER_ID" property="orderId" jdbcType="NUMERIC"/>
+    <resultMap id="BaseResultMap" type="map">
+        <id column="ORDER_ID" property="orderId" jdbcType="BIGINT"/>
         <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
-        <result column="CUSTOMER_ID" property="customerId" jdbcType="NUMERIC"/>
-        <result column="STAFF_ID" property="staffId" jdbcType="NUMERIC"/>
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="INTEGER"/>
+        <result column="STAFF_ID" property="staffId" jdbcType="INTEGER"/>
         <result column="GAME_TYPE" property="gameType" jdbcType="VARCHAR"/>
-        <result column="SERVICE_HOURS" property="serviceHours" jdbcType="NUMERIC"/>
+        <result column="SERVICE_HOURS" property="serviceHours" jdbcType="INTEGER"/>
         <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL"/>
         <result column="TOTAL_AMOUNT" property="totalAmount" jdbcType="DECIMAL"/>
         <result column="PLATFORM_COMMISSION" property="platformCommission" jdbcType="DECIMAL"/>
@@ -22,6 +22,8 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="IS_DELETED" property="isDeleted" jdbcType="CHAR"/>
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
+        <result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -32,25 +34,38 @@
     </sql>
 
     <select id="selectOrderList" parameterType="map" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM TB_ORDER
-        WHERE IS_DELETED = 'N'
+        SELECT 
+            o.ORDER_ID, o.ORDER_NO, o.CUSTOMER_ID, o.STAFF_ID, o.GAME_TYPE, o.SERVICE_HOURS, 
+            o.UNIT_PRICE, o.TOTAL_AMOUNT, o.PLATFORM_COMMISSION, o.STAFF_INCOME, o.ORDER_STATUS, 
+            o.PAY_TIME, o.START_TIME, o.END_TIME, o.CUSTOMER_COMMENT, o.STAFF_COMMENT, 
+            o.CREATE_TIME, o.UPDATE_TIME, o.IS_DELETED,
+            c.NICKNAME AS CUSTOMER_NAME,
+            s.STAFF_NAME
+        FROM TB_ORDER o
+        LEFT JOIN TB_CUSTOMER c ON o.CUSTOMER_ID = c.CUSTOMER_ID
+        LEFT JOIN TB_STAFF s ON o.STAFF_ID = s.STAFF_ID
+        WHERE o.IS_DELETED = 'N'
         <if test="params.orderNo != null and params.orderNo != ''">
-            AND ORDER_NO LIKE CONCAT('%', #{params.orderNo}, '%')
+            AND o.ORDER_NO LIKE CONCAT('%', #{params.orderNo}, '%')
         </if>
         <if test="params.customerId != null">
-            AND CUSTOMER_ID = #{params.customerId}
+            AND o.CUSTOMER_ID = #{params.customerId}
         </if>
         <if test="params.staffId != null">
-            AND STAFF_ID = #{params.staffId}
+            AND o.STAFF_ID = #{params.staffId}
         </if>
         <if test="params.orderStatus != null and params.orderStatus != ''">
-            AND ORDER_STATUS = #{params.orderStatus}
+            AND o.ORDER_STATUS = #{params.orderStatus}
         </if>
-        ORDER BY CREATE_TIME DESC
+        <if test="params.customerName != null and params.customerName != ''">
+            AND c.NICKNAME LIKE CONCAT('%', #{params.customerName}, '%')
+        </if>
+        <if test="params.staffName != null and params.staffName != ''">
+            AND s.STAFF_NAME LIKE CONCAT('%', #{params.staffName}, '%')
+        </if>
+        ORDER BY o.CREATE_TIME DESC
         <if test="params.page != null and params.size != null">
-            OFFSET #{params.page} ROWS
-            FETCH NEXT #{params.size} ROWS ONLY
+            LIMIT #{params.size} OFFSET #{params.page}
         </if>
     </select>
 
@@ -67,11 +82,11 @@
             STAFF_INCOME, ORDER_STATUS, PAY_TIME, START_TIME, END_TIME, 
             CUSTOMER_COMMENT, STAFF_COMMENT, CREATE_TIME, UPDATE_TIME, IS_DELETED
         ) VALUES (
-            SEQ_ORDER_ID.NEXTVAL, #{orderNo}, #{customerId}, #{staffId}, 
+            #{orderId}, #{orderNo}, #{customerId}, #{staffId}, 
             #{gameType}, #{serviceHours}, #{unitPrice}, #{totalAmount}, 
             #{platformCommission}, #{staffIncome}, #{orderStatus}, 
             #{payTime}, #{startTime}, #{endTime}, #{customerComment}, 
-            #{staffComment}, SYSDATE, SYSDATE, 'N'
+            #{staffComment}, NOW(), NOW(), 'N'
         )
     </insert>
 
@@ -93,14 +108,14 @@
             <if test="endTime != null">END_TIME = #{endTime},</if>
             <if test="customerComment != null">CUSTOMER_COMMENT = #{customerComment},</if>
             <if test="staffComment != null">STAFF_COMMENT = #{staffComment},</if>
-            UPDATE_TIME = SYSDATE,
+            UPDATE_TIME = NOW(),
         </set>
         WHERE ORDER_ID = #{orderId} AND IS_DELETED = 'N'
     </update>
 
     <update id="deleteOrder" parameterType="long">
         UPDATE TB_ORDER
-        SET IS_DELETED = 'Y', UPDATE_TIME = SYSDATE
+        SET IS_DELETED = 'Y', UPDATE_TIME = NOW()
         WHERE ORDER_ID = #{id}
     </update>
 
@@ -124,7 +139,7 @@
 
     <update id="updateOrderStatus" parameterType="map">
         UPDATE TB_ORDER
-        SET ORDER_STATUS = #{status}, UPDATE_TIME = SYSDATE
+        SET ORDER_STATUS = #{status}, UPDATE_TIME = NOW()
         WHERE ORDER_ID = #{id}
     </update>
 </mapper>

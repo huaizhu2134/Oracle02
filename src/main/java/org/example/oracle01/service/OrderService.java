@@ -9,7 +9,7 @@ import java.util.Map;
 public interface OrderService {
 
     // 查询订单列表
-    Result<PageResult<Order>> getOrderList(Map<String, Object> params);
+    Result<PageResult<Map<String, Object>>> getOrderList(Map<String, Object> params);
 
     // 根据ID查询订单
     Result<Order> getOrderById(Long id);

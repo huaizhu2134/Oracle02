@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: '/api', // 代理API的基础URL
+  baseURL: '', // API路径已包含/api前缀
   timeout: 5000
 })
 

@@ -3,11 +3,11 @@
 <mapper namespace="org.example.oracle01.mapper.StaffMapper">
 
     <resultMap id="BaseResultMap" type="org.example.oracle01.model.Staff">
-        <id column="STAFF_ID" property="staffId" jdbcType="NUMERIC"/>
+        <id column="STAFF_ID" property="staffId" jdbcType="INTEGER"/>
         <result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR"/>
         <result column="REAL_NAME" property="realName" jdbcType="VARCHAR"/>
         <result column="GENDER" property="gender" jdbcType="CHAR"/>
-        <result column="AGE" property="age" jdbcType="NUMERIC"/>
+        <result column="AGE" property="age" jdbcType="INTEGER"/>
         <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
         <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
         <result column="AVATAR_URL" property="avatarUrl" jdbcType="VARCHAR"/>
@@ -15,7 +15,7 @@
         <result column="SERVICE_TYPE" property="serviceType" jdbcType="VARCHAR"/>
         <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL"/>
         <result column="STATUS" property="status" jdbcType="VARCHAR"/>
-        <result column="TOTAL_ORDERS" property="totalOrders" jdbcType="NUMERIC"/>
+        <result column="TOTAL_ORDERS" property="totalOrders" jdbcType="INTEGER"/>
         <result column="TOTAL_INCOME" property="totalIncome" jdbcType="DECIMAL"/>
         <result column="AVG_SCORE" property="avgScore" jdbcType="DECIMAL"/>
         <result column="CERT_STATUS" property="certStatus" jdbcType="VARCHAR"/>
@@ -43,8 +43,7 @@
         </if>
         ORDER BY CREATE_TIME DESC
         <if test="params.page != null and params.size != null">
-            OFFSET #{params.page} ROWS
-            FETCH NEXT #{params.size} ROWS ONLY
+            LIMIT #{params.size} OFFSET #{params.page}
         </if>
     </select>
 
@@ -61,10 +60,10 @@
             TOTAL_ORDERS, TOTAL_INCOME, AVG_SCORE, CERT_STATUS, CREATE_TIME, 
             UPDATE_TIME, LAST_LOGIN_TIME, IS_DELETED
         ) VALUES (
-            SEQ_STAFF_ID.NEXTVAL, #{staffName}, #{realName}, #{gender}, #{age}, 
+            #{staffId}, #{staffName}, #{realName}, #{gender}, #{age}, 
             #{phone}, #{email}, #{avatarUrl}, #{skillLevel}, #{serviceType}, 
-            #{unitPrice}, #{status}, #{totalOrders}, #{totalIncome}, 
-            #{avgScore}, #{certStatus}, SYSDATE, SYSDATE, #{lastLoginTime}, 'N'
+            #{unitPrice}, #{status}, COALESCE(#{totalOrders}, 0), COALESCE(#{totalIncome}, 0), 
+            COALESCE(#{avgScore}, 5.0), COALESCE(#{certStatus}, '未认证'), NOW(), NOW(), NULL, 'N'
         )
     </insert>
 
@@ -87,14 +86,14 @@
             <if test="avgScore != null">AVG_SCORE = #{avgScore},</if>
             <if test="certStatus != null">CERT_STATUS = #{certStatus},</if>
             <if test="lastLoginTime != null">LAST_LOGIN_TIME = #{lastLoginTime},</if>
-            UPDATE_TIME = SYSDATE,
+            UPDATE_TIME = NOW(),
         </set>
         WHERE STAFF_ID = #{staffId} AND IS_DELETED = 'N'
     </update>
 
     <update id="deleteStaff" parameterType="long">
         UPDATE TB_STAFF
-        SET IS_DELETED = 'Y', UPDATE_TIME = SYSDATE
+        SET IS_DELETED = 'Y', UPDATE_TIME = NOW()
         WHERE STAFF_ID = #{id}
     </update>
 

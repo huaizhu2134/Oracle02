@@ -1,0 +1,54 @@
+-- 验证提现管理测试数据的脚本
+
+-- 1. 检查有多少陪玩人员有可提现的收入
+SELECT 
+    COUNT(*) AS staff_with_income,
+    AVG(TOTAL_INCOME) AS avg_income,
+    MAX(TOTAL_INCOME) AS max_income,
+    MIN(TOTAL_INCOME) AS min_income
+FROM TB_STAFF 
+WHERE IS_DELETED = 'N' 
+  AND TOTAL_INCOME > 0;
+
+-- 2. 检查陪玩人员收入详情（前10条）
+SELECT 
+    STAFF_ID,
+    STAFF_NAME,
+    TOTAL_INCOME,
+    TOTAL_ORDERS
+FROM TB_STAFF 
+WHERE IS_DELETED = 'N' 
+  AND TOTAL_INCOME > 0
+ORDER BY TOTAL_INCOME DESC
+LIMIT 10;
+
+-- 3. 检查已完成订单的数量和财务数据
+SELECT 
+    COUNT(*) AS completed_orders_count,
+    SUM(TOTAL_AMOUNT) AS total_amount,
+    SUM(STAFF_INCOME) AS total_staff_income,
+    SUM(PLATFORM_COMMISSION) AS total_platform_commission
+FROM TB_ORDER 
+WHERE IS_DELETED = 'N' 
+  AND ORDER_STATUS = '已完成';
+
+-- 4. 检查最近的订单数据
+SELECT 
+    ORDER_ID,
+    ORDER_NO,
+    STAFF_ID,
+    TOTAL_AMOUNT,
+    STAFF_INCOME,
+    PLATFORM_COMMISSION,
+    ORDER_STATUS
+FROM TB_ORDER 
+WHERE IS_DELETED = 'N'
+ORDER BY CREATE_TIME DESC
+LIMIT 10;
+
+-- 5. 检查财务统计相关数据
+SELECT 
+    (SELECT COUNT(*) FROM TB_ORDER WHERE DATE(CREATE_TIME) = CURDATE()) AS today_orders,
+    (SELECT IFNULL(SUM(TOTAL_AMOUNT), 0) FROM TB_ORDER WHERE DATE(CREATE_TIME) = CURDATE() AND ORDER_STATUS = '已完成') AS today_income,
+    (SELECT IFNULL(SUM(TOTAL_AMOUNT * 0.2), 0) FROM TB_ORDER WHERE ORDER_STATUS = '已完成') AS platform_income,
+    (SELECT IFNULL(SUM(TOTAL_AMOUNT * 0.8), 0) FROM TB_ORDER WHERE ORDER_STATUS = '已完成') AS staff_income;

@@ -20,18 +20,24 @@ public class EvaluationController {
 
     // 查询评价列表
     @GetMapping("/list")
-    public Result<PageResult<Evaluation>> getEvaluationList(
+    public Result<PageResult<Map<String, Object>>> getEvaluationList(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "orderId", required = false) Long orderId,
-            @RequestParam(value = "score", required = false) Integer score) {
-        
+            @RequestParam(value = "score", required = false) Integer score,
+            @RequestParam(value = "orderNo", required = false) String orderNo,
+            @RequestParam(value = "staffName", required = false) String staffName,
+            @RequestParam(value = "customerName", required = false) String customerName) {
+
         Map<String, Object> params = new HashMap<>();
         params.put("page", (page - 1) * size);
         params.put("size", size);
         params.put("orderId", orderId);
         params.put("score", score);
-        
+        params.put("orderNo", orderNo);
+        params.put("staffName", staffName);
+        params.put("customerName", customerName);
+
         return evaluationService.getEvaluationList(params);
     }
 

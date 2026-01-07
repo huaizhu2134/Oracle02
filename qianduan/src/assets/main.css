@@ -8,6 +8,7 @@
   height: 100vh;
   overflow: hidden;
   background-color: var(--bg-color-page);
+  animation: fadeIn 0.6s ease-out;
 }
 
 a,
@@ -42,6 +43,7 @@ a,
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 .admin-aside {
@@ -63,6 +65,7 @@ a,
   overflow: auto;
   padding: var(--spacing-md);
   background-color: var(--bg-color-page);
+  transition: all 0.3s ease;
 }
 
 .admin-content {
@@ -71,6 +74,7 @@ a,
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-md);
   min-height: calc(100% - 40px);
+  animation: slideUp 0.5s ease-out;
 }
 
 .search-bar {
@@ -79,6 +83,7 @@ a,
   border-radius: var(--radius-md);
   margin-bottom: var(--spacing-md);
   box-shadow: var(--shadow-sm);
+  animation: slideDown 0.4s ease-out;
 }
 
 .operation-bar {
@@ -90,6 +95,7 @@ a,
   display: flex;
   justify-content: space-between;
   align-items: center;
+  animation: slideDown 0.4s ease-out;
 }
 
 .table-container {
@@ -97,6 +103,7 @@ a,
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-md);
+  animation: fadeIn 0.5s ease-out;
 }
 
 .pagination-wrapper {
@@ -105,4 +112,159 @@ a,
   border-top: 1px solid var(--border-color-light);
   display: flex;
   justify-content: center;
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Element Plus 组件样式覆盖 */
+.el-button {
+  border-radius: var(--radius-md) !important;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.el-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.el-button:hover::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+}
+
+.el-button--primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light)) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3) !important;
+}
+
+.el-button--primary:hover {
+  background: linear-gradient(135deg, var(--primary-color-light), var(--primary-color)) !important;
+  border-color: var(--primary-color-light) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(64, 158, 255, 0.4) !important;
+}
+
+.el-input__wrapper {
+  border-radius: var(--radius-md) !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 0 0 1px var(--border-color) !important;
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--primary-color-3) !important;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important;
+}
+
+.el-card {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all 0.3s ease !important;
+  overflow: visible !important;
+}
+
+.el-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.el-table {
+  border-radius: var(--radius-md) !important;
+}
+
+.el-pagination {
+  margin-top: var(--spacing-md) !important;
+}
+
+/* 动画定义 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+/* 悬停动画效果 */
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hover-pulse {
+  transition: all 0.3s ease;
+}
+
+.hover-pulse:hover {
+  animation: pulse 0.6s ease-in-out;
+}
+
+.hover-bounce {
+  transition: all 0.3s ease;
+}
+
+.hover-bounce:hover {
+  animation: bounce 0.6s ease;
 }

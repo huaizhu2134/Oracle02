@@ -67,10 +67,7 @@
             <el-icon><Plus /></el-icon>
             新增客户
           </el-button>
-          <el-button type="success">
-            <el-icon><Download /></el-icon>
-            导出
-          </el-button>
+
         </div>
         <div class="operation-right">
           <el-button type="default" @click="refreshData">
@@ -92,7 +89,7 @@
         class="data-table"
         height="calc(100vh - 320px)"
       >
-        <el-table-column type="index" width="50" label="#" />
+        <el-table-column type="index" width="50" label="排序" />
         <el-table-column prop="customerId" label="ID" width="80" />
         <el-table-column prop="username" label="用户名" width="120" show-overflow-tooltip />
         <el-table-column prop="nickname" label="昵称" width="120" show-overflow-tooltip />

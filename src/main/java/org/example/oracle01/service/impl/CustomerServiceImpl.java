@@ -7,6 +7,7 @@ import org.example.oracle01.util.Result;
 import org.example.oracle01.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Result<String> addCustomer(Customer customer) {
         try {
             int result = customerMapper.insertCustomer(customer);
@@ -64,6 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Result<String> updateCustomer(Customer customer) {
         try {
             int result = customerMapper.updateCustomer(customer);
@@ -78,6 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Result<String> deleteCustomer(Long id) {
         try {
             int result = customerMapper.deleteCustomer(id);
@@ -102,6 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Result<String> rechargeBalance(Long customerId, BigDecimal amount) {
         try {
             if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {

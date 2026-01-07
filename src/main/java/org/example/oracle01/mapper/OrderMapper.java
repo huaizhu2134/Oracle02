@@ -11,7 +11,7 @@ import java.util.Map;
 public interface OrderMapper {
 
     // 查询订单列表
-    List<Order> selectOrderList(@Param("params") Map<String, Object> params);
+    List<Map<String, Object>> selectOrderList(@Param("params") Map<String, Object> params);
 
     // 根据ID查询订单
     Order selectOrderById(@Param("id") Long id);

@@ -12,9 +12,9 @@
         <div class="header-right">
           <el-dropdown @command="handleCommand" placement="bottom-end">
             <div class="user-info">
-              <el-avatar size="small" :icon="UserFilled" class="user-avatar" />
+              <el-avatar size="small" :icon="UserFilled" class="user-avatar"></el-avatar>
               <span class="user-name">管理员</span>
-              <el-icon class="el-icon--right"><arrow-down /></el-icon>
+              <el-icon><ArrowDown /></el-icon>
             </div>
             <template #dropdown>
               <el-dropdown-menu>
@@ -35,15 +35,9 @@
 
     <div class="admin-container">
       <!-- 侧边栏 -->
-      <aside :class="['admin-aside', { 'collapsed': isCollapse }]">
+      <aside :class="isCollapse ? 'admin-aside collapsed' : 'admin-aside'">
         <div class="sidebar-content">
-          <el-menu
-            :default-active="$route.path"
-            class="sidebar-menu"
-            :router="true"
-            :collapse="isCollapse"
-            :collapse-transition="false"
-          >
+          <el-menu :default-active="$route.path" class="sidebar-menu" :router="true" :collapse="isCollapse" :collapse-transition="false">
             <el-menu-item index="/">
               <el-icon><House /></el-icon>
               <template #title>首页</template>
@@ -75,7 +69,8 @@
           </el-menu>
         </div>
         <div class="sidebar-toggle" @click="toggleSidebar">
-          <el-icon><Expand v-if="isCollapse" /><Fold v-else /></el-icon>
+          <el-icon v-if="isCollapse"><Expand /></el-icon>
+          <el-icon v-else><Fold /></el-icon>
         </div>
       </aside>
 
@@ -83,10 +78,9 @@
       <main class="admin-main">
         <div class="admin-content">
           <router-view v-slot="{ Component }">
-            <keep-alive>
-              <component :is="Component" v-if="$route.meta.keepAlive" />
+            <keep-alive include="keepAlive">
+              <component :is="Component" :key="$route.fullPath" />
             </keep-alive>
-            <component :is="Component" v-if="!$route.meta.keepAlive" />
           </router-view>
         </div>
       </main>
@@ -152,8 +146,9 @@ const handleCommand = async (command) => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-color-page);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-attachment: fixed;
 }
 
 .admin-container {
@@ -164,14 +159,16 @@ const handleCommand = async (command) => {
 
 .admin-header {
   height: var(--header-height);
-  background: var(--bg-color-header);
+  background: linear-gradient(135deg, var(--primary-color), #3498db);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--spacing-lg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   flex-shrink: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .header-content {
@@ -185,17 +182,29 @@ const handleCommand = async (command) => {
   display: flex;
   align-items: center;
   color: white;
+  animation: slideInLeft 0.6s ease-out;
 }
 
 .header-left .logo .el-icon {
-  font-size: 24px;
-  margin-right: 10px;
+  font-size: 28px;
+  margin-right: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 6px;
+  transition: all 0.3s ease;
+}
+
+.header-left .logo:hover .el-icon {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .header-left .logo h1 {
   margin: 0;
-  font-size: 18px;
-  font-weight: var(--font-weight-semibold);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .header-right {
@@ -207,14 +216,19 @@ const handleCommand = async (command) => {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.3s;
   color: white;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .user-info:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .user-avatar {
@@ -222,19 +236,20 @@ const handleCommand = async (command) => {
 }
 
 .user-name {
-  margin-right: 4px;
+  margin-right: 6px;
   font-weight: var(--font-weight-medium);
 }
 
 .admin-aside {
   width: var(--sidebar-width);
-  background-color: var(--bg-color-sidebar);
+  background: linear-gradient(to bottom, #1e3c72, #2a5298);
   transition: all 0.3s;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 0 16px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .admin-aside.collapsed {
@@ -252,86 +267,121 @@ const handleCommand = async (command) => {
   border-right: none;
   height: 100%;
   overflow-y: auto;
+  background: transparent;
 }
 
 .sidebar-menu :deep(.el-menu-item) {
-  margin: 4px 8px;
-  border-radius: 8px;
-  height: 44px;
-  line-height: 44px;
+  margin: 4px 10px;
+  border-radius: 10px;
+  height: 46px;
+  line-height: 46px;
   color: rgba(255, 255, 255, 0.7);
-  margin: 6px 12px;
+  margin: 6px 10px;
   transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid transparent;
 }
 
 .sidebar-menu :deep(.el-menu-item.is-active) {
-  background: linear-gradient(90deg, rgba(64, 158, 255, 0.1), rgba(64, 158, 255, 0.05));
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
   border-left: 3px solid var(--primary-color);
-  box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateX(4px);
 }
 
 .sidebar-menu :deep(.el-menu-item:hover) {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: translateX(3px);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  transform: translateX(4px);
+}
+
+.sidebar-menu :deep(.el-menu-item i) {
+  transition: all 0.3s;
+}
+
+.sidebar-menu :deep(.el-menu-item:hover) i {
+  transform: scale(1.2);
+  color: var(--primary-color-light);
 }
 
 .sidebar-toggle {
-  height: 44px;
-  line-height: 44px;
+  height: 48px;
+  line-height: 48px;
   text-align: center;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 8px;
-  border-radius: 4px;
+  margin: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: all 0.3s;
 }
 
 .sidebar-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
+  transform: scale(1.05);
 }
 
 .admin-main {
   flex: 1;
   overflow: auto;
   padding: var(--spacing-md);
-  background-color: var(--bg-color-page);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
 }
 
 .admin-content {
-  background: var(--color-white);
-  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   min-height: calc(100% - 40px);
   height: 100%;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* 滚动条样式 */
 :deep(.el-main::-webkit-scrollbar) {
-  width: 6px;
+  width: 8px;
 }
 
 :deep(.el-main::-webkit-scrollbar-track) {
-  background: #f1f1f1;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
 :deep(.el-main::-webkit-scrollbar-thumb) {
-  background: #c1c1c1;
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  transition: all 0.3s;
 }
 
 :deep(.el-main::-webkit-scrollbar-thumb:hover) {
-  background: #a8a8a8;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 :deep(.el-aside::-webkit-scrollbar) {
-  width: 0;
+  width: 6px;
+}
+
+:deep(.el-aside::-webkit-scrollbar-track) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:deep(.el-aside::-webkit-scrollbar-thumb) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:deep(.el-aside::-webkit-scrollbar-thumb:hover) {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 :deep(.el-menu) {
@@ -345,5 +395,32 @@ const handleCommand = async (command) => {
 
 :deep(.el-menu-item:hover) {
   color: #fff;
+}
+
+/* 动画定义 */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .header-left .logo h1 {
+    font-size: 18px;
+  }
+  
+  .admin-aside {
+    width: var(--sidebar-collapsed-width);
+  }
 }
 </style>

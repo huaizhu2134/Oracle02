@@ -20,18 +20,22 @@ public class OrderController {
 
     // 查询订单列表
     @GetMapping("/list")
-    public Result<PageResult<Order>> getOrderList(
+    public Result<PageResult<Map<String, Object>>> getOrderList(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "orderNo", required = false) String orderNo,
-            @RequestParam(value = "status", required = false) String status) {
-        
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "customerName", required = false) String customerName,
+            @RequestParam(value = "staffName", required = false) String staffName) {
+
         Map<String, Object> params = new HashMap<>();
         params.put("page", (page - 1) * size);
         params.put("size", size);
         params.put("orderNo", orderNo);
         params.put("status", status);
-        
+        params.put("customerName", customerName);
+        params.put("staffName", staffName);
+
         return orderService.getOrderList(params);
     }
 

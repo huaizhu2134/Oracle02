@@ -10,7 +10,7 @@ import java.util.Map;
 public interface EvaluationService {
 
     // 查询评价列表
-    Result<PageResult<Evaluation>> getEvaluationList(Map<String, Object> params);
+    Result<PageResult<Map<String, Object>>> getEvaluationList(Map<String, Object> params);
 
     // 根据ID查询评价
     Result<Evaluation> getEvaluationById(Long id);

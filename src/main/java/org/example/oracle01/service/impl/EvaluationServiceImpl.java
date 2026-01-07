@@ -7,6 +7,7 @@ import org.example.oracle01.util.Result;
 import org.example.oracle01.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -18,16 +19,17 @@ public class EvaluationServiceImpl implements EvaluationService {
     private EvaluationMapper evaluationMapper;
 
     @Override
-    public Result<PageResult<Evaluation>> getEvaluationList(Map<String, Object> params) {
+    public Result<PageResult<Map<String, Object>>> getEvaluationList(Map<String, Object> params) {
         try {
             // 获取总记录数
             Integer page = params.get("page") != null ? (Integer) params.get("page") : 0;
             Integer size = params.get("size") != null ? (Integer) params.get("size") : 10;
-            
+
             int total = evaluationMapper.countEvaluation(params);
-            List<Evaluation> evaluationList = evaluationMapper.selectEvaluationList(params);
-            
-            PageResult<Evaluation> pageResult = new PageResult<>((long) total, evaluationList, page/size + 1, size);
+            List<Map<String, Object>> evaluationList = evaluationMapper.selectEvaluationList(params);
+
+            PageResult<Map<String, Object>> pageResult = new PageResult<>((long) total, evaluationList, page / size + 1,
+                    size);
             return Result.success(pageResult);
         } catch (Exception e) {
             return Result.error("查询评价列表失败：" + e.getMessage());
@@ -49,6 +51,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
+    @Transactional
     public Result<String> addEvaluation(Evaluation evaluation) {
         try {
             int result = evaluationMapper.insertEvaluation(evaluation);
@@ -63,6 +66,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
+    @Transactional
     public Result<String> updateEvaluation(Evaluation evaluation) {
         try {
             int result = evaluationMapper.updateEvaluation(evaluation);
@@ -77,6 +81,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
+    @Transactional
     public Result<String> deleteEvaluation(Long id) {
         try {
             int result = evaluationMapper.deleteEvaluation(id);

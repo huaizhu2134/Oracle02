@@ -11,7 +11,7 @@ import java.util.Map;
 public interface EvaluationMapper {
 
     // 查询评价列表
-    List<Evaluation> selectEvaluationList(@Param("params") Map<String, Object> params);
+    List<Map<String, Object>> selectEvaluationList(@Param("params") Map<String, Object> params);
 
     // 根据ID查询评价
     Evaluation selectEvaluationById(@Param("id") Long id);

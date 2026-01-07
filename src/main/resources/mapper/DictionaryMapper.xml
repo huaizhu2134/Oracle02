@@ -3,12 +3,12 @@
 <mapper namespace="org.example.oracle01.mapper.DictionaryMapper">
 
     <resultMap id="BaseResultMap" type="org.example.oracle01.model.Dictionary">
-        <id column="DICT_ID" property="dictId" jdbcType="NUMERIC"/>
+        <id column="DICT_ID" property="dictId" jdbcType="INTEGER"/>
         <result column="DICT_TYPE" property="dictType" jdbcType="VARCHAR"/>
         <result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR"/>
         <result column="DICT_VALUE" property="dictValue" jdbcType="VARCHAR"/>
         <result column="DICT_DESC" property="dictDesc" jdbcType="VARCHAR"/>
-        <result column="SORT_ORDER" property="sortOrder" jdbcType="NUMERIC"/>
+        <result column="SORT_ORDER" property="sortOrder" jdbcType="INTEGER"/>
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="IS_DELETED" property="isDeleted" jdbcType="CHAR"/>
     </resultMap>
@@ -29,8 +29,7 @@
         </if>
         ORDER BY SORT_ORDER ASC, CREATE_TIME DESC
         <if test="params.page != null and params.size != null">
-            OFFSET #{params.page} ROWS
-            FETCH NEXT #{params.size} ROWS ONLY
+            LIMIT #{params.size} OFFSET #{params.page}
         </if>
     </select>
 
@@ -52,8 +51,8 @@
             DICT_ID, DICT_TYPE, DICT_CODE, DICT_VALUE, DICT_DESC, 
             SORT_ORDER, CREATE_TIME, IS_DELETED
         ) VALUES (
-            SEQ_DICT_ID.NEXTVAL, #{dictType}, #{dictCode}, #{dictValue}, 
-            #{dictDesc}, #{sortOrder}, SYSDATE, 'N'
+            #{dictId}, #{dictType}, #{dictCode}, #{dictValue}, 
+            #{dictDesc}, #{sortOrder}, NOW(), 'N'
         )
     </insert>
 
